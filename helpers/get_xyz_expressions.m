@@ -1,23 +1,33 @@
-function [x, y, z] = get_xyz_expressions(dh_parameters, verbose)
-   % get_xyz_expressions Applies homogeneous transforms to DH parameters to compute the transformation matrix from the base to the end-effector.
-    %
-    % This function calculates the transformation matrix from the base of the robot to the end-effector, based on the DH parameters. 
-    % It returns symbolic expressions for x, y, and z positions of the end-effector.
-    %
-    % Parameters:
-    %   dh_parameters : A symbolic matrix that represents the DH parameters of the robot.
-    %   
-    %   verbose : A boolean flag that, if true, enables verbose logging of the final transformation matrix and position expressions.
-    %
-    % Returns:
-    %   [x, y, z] : Symbolic expressions for the x, y, and z positions of the end-effector.
-    %
-
+function [x, y, z] = get_xyz_expressions(dh_parameters, dh_transform_fn, verbose)
+%GET_XYZ_EXPRESSIONS Calculates the x, y, and z positions from Denavit-Hartenberg parameters.
+%
+% Syntax:
+%   [x, y, z] = get_xyz_expressions(dh_parameters, dh_transform_fn, verbose)
+%
+% Inputs:
+%   dh_parameters: A matrix containing the Denavit-Hartenberg parameters.
+%                  Each row represents one link, and the columns are 
+%                  [a,alpha,d,theta] for each link.
+%
+%   dh_transform_fn: Function handle to a function that computes the 
+%                    Denavit-Hartenberg transformation matrix. This 
+%                    function should accept four arguments corresponding 
+%                    to the four Denavit-Hartenberg parameters (a,alpha,d,theta).
+%
+%   verbose: A boolean flag that, when true, triggers the function to 
+%            display the final transformation matrix and the expressions 
+%            for position.
+%
+% Outputs:
+%   x, y, z: The symbolic expressions for the x, y, and z coordinates of 
+%            the end-effector (i.e., the position of the end-effector in 
+%            the base frame).
+%
     % Calculate transformation matrix from base to end-effector
     T0_ee = eye(4);
     % Apply each transformation
     for i = 1:size(dh_parameters, 1)
-        T{i} = get_DH_matrix(dh_parameters(i,1), ...
+        T{i} = dh_transform_fn(dh_parameters(i,1), ...
             dh_parameters(i,2), ...
             dh_parameters(i,3), ...
             dh_parameters(i,4));

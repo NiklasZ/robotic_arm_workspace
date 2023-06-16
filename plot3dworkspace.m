@@ -1,12 +1,11 @@
-function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unused_position_threshold, verbose)
-%PLOT2DWORKSPACE Plots a 2D representation of the reachable workspace of a robot.
+function plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbose)
+%PLOT3DWORKSPACE Plots a 3D representation of the reachable workspace of a robot.
 %
 % Syntax:
-%   plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unused_position_threshold, verbose)
+%   plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbose)
 %
 % Inputs:
-%   dh_parameters: A matrix containing the Denavit-Hartenberg parameters
-%                  (unknown parameters as symbolic variables)
+%   dh_parameters: A matrix containing the Denavit-Hartenberg parameters.
 %                  Each row represents one link, and the columns are 
 %                  [a,alpha,d,theta] for each link.
 %
@@ -20,9 +19,6 @@ function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unuse
 %                    to the four Denavit-Hartenberg parameters (a,alpha,d,theta).
 %                    Default: @get_DH_matrix.
 %
-%   unused_position_threshold: (Optional) A threshold below which a position is 
-%                              considered to be effectively zero. Default: 0.0001.
-%
 %   verbose: (Optional) A boolean flag that, when true, triggers the function to 
 %            display various calculation details like the transformation matrix 
 %            and more. Default: false.
@@ -30,16 +26,11 @@ function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unuse
 % Outputs:
 %   No outputs. The function directly plots the reachable workspace.
 %
-% Example:
-%   dh_parameters = [0 0 d1 0; 0 -pi/2 d2 pi/2; 0 -pi/2 0 theta3; 1 0 0 0;];
-%   parameter_ranges = containers.Map({'d1', 'd2', 'theta3'},{2:0.1:3, 2:0.1:3, 0:pi/20:2*pi});
-%   plot2dworkspace(dh_parameters, parameter_ranges, @get_DH_matrix, 0.0001, true);
-%
+
     arguments
         dh_parameters
         parameter_ranges
         dh_transform_fn = @get_DH_matrix
-        unused_position_threshold = 0.0001
         verbose = false % Whether to log various calculation details like the transformation matrix and more.
     end
 
@@ -83,31 +74,14 @@ function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unuse
         func_params = values(param_value_map, keys_cell);
         positions{i} = pos_func(func_params{:});
     end
-
-    % Determine the largest absolute value in each cell
-    minValues = cellfun(@(x) max(abs(x(:))), positions);
-    axis_labels = {'X','Y','Z'};
     
-    % Get the smallest value from all cells
-    [~, min_idx] = min(minValues);
-
-    if minValues(min_idx) > unused_position_threshold
-        error(['With a 2D workspace, it is expected that one of the X,Y,Z positions' ...
-            ' is always near 0 (< %d). Instead the smallest candidate %s has a max position magnitude of' ...
-            '%d'], unused_position_threshold, axis_labels{min_idx}, minValues(min_idx))
-    end
-
-    % Plot results
-    chosen_indices = true(size(axis_labels));
-    chosen_indices(min_idx) = false;
-    chosen_positions = positions(chosen_indices);
-    chosen_axes = axis_labels(chosen_indices);
-
+    % Plot points
     figure(1)
-    plot(chosen_positions{:},'.');
+    plot3(positions{:},'.');
     title('Reachable Workspace')
-    xlabel(chosen_axes{1}) 
-    ylabel(chosen_axes{2}) 
+    xlabel('X') 
+    ylabel('Y')
+    zlabel('Z')
     axis equal
     grid on
 end
