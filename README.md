@@ -1,5 +1,5 @@
 # Robotic Arm Workspace Plotter
-This is the repository for a Matlab plugin that allows plotting the reachable workspace 2D and 3D robotic arms using the [DH parameters](https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters).
+This is the repository for a [Matlab add-on](https://la.mathworks.com/matlabcentral/fileexchange/131239-2d-and-3d-robotic-arm-workspace-plotting) that allows plotting the reachable workspace 2D and 3D robotic arms using the [DH parameters](https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters).
 
 # Quickstart
 
