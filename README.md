@@ -70,3 +70,7 @@ Which will render as follows:
 </p>
 
 For more examples, see [/examples](/home/niklasz/Desktop/robotic_arm_workspace/examples).
+
+# Notes
+- **Performance** - this add-on uses a brute-force method that calculates the end-effector's position for every possible DH parameter combination. While reasonably well-optimised this can become expensive quickly. For example, if you have a 6 DOF robot and want to explore 20 possible values per parameter, this will take $20^6 = 64,000,000$.
+- **DH Parameter Convention** - there are conventions ways to construct the DH transformation matrix, based on the order of the individual transforms for the DH parameters. By default this add-on uses the one [here](helpers/get_DH_matrix.m), but it is possible to provide an alternative function that returns a different matrix (see above 3D example).
