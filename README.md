@@ -69,7 +69,7 @@ Which will render as follows:
   <img src="doc/3d_robot_example.png" />
 </p>
 
-For more examples, see [/examples](/home/niklasz/Desktop/robotic_arm_workspace/examples).
+For more examples, see [/examples](/examples).
 
 # Notes
 - **Performance** - this add-on uses a brute-force method that calculates the end-effector's position for every possible DH parameter combination. While reasonably well-optimised this can become expensive quickly. For example, if you have a 6 DOF robot and want to explore 20 possible values per parameter, this will take $20^6 = 64,000,000$ operations and units of memory.
