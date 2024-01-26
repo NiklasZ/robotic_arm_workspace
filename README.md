@@ -27,7 +27,7 @@ Which will render as follows:
   <img src="doc/2d_robot_example.png" />
 </p>
 
-For more examples, see [/examples](/home/niklasz/Desktop/robotic_arm_workspace/examples).
+For more examples, see [/examples](/examples).
 
 ## 3D Example
 Here's a basic example for plotting a 3D robot's workspace via `plot3dworkspace.m`:
