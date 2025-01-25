@@ -1,8 +1,8 @@
-function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unused_position_threshold, verbose)
+function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unused_position_threshold, verbose, save_to_file)
 %PLOT2DWORKSPACE Plots a 2D representation of the reachable workspace of a robot.
 %
 % Syntax:
-%   plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unused_position_threshold, verbose)
+%   plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unused_position_threshold, verbose, save_to_file)
 %
 % Inputs:
 %   dh_parameters: A matrix containing the Denavit-Hartenberg parameters
@@ -27,13 +27,17 @@ function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unuse
 %            display various calculation details like the transformation matrix 
 %            and more. Default: false.
 %
+%   save_to_file: (Optional) A string specifying the name of the .mat file to 
+%                 save the positions cell array. If empty, positions will not be saved.
+%
 % Outputs:
 %   No outputs. The function directly plots the reachable workspace.
 %
 % Example:
 %   dh_parameters = [0 0 d1 0; 0 -pi/2 d2 pi/2; 0 -pi/2 0 theta3; 1 0 0 0;];
 %   parameter_ranges = containers.Map({'d1', 'd2', 'theta3'},{2:0.1:3, 2:0.1:3, 0:pi/20:2*pi});
-%   plot2dworkspace(dh_parameters, parameter_ranges, @get_DH_matrix, 0.0001, true);
+%   plot2dworkspace(dh_parameters, parameter_ranges, @get_DH_matrix,
+%   0.0001, true, "positions");
 %
     arguments
         dh_parameters
@@ -41,6 +45,7 @@ function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unuse
         dh_transform_fn = @get_DH_matrix
         unused_position_threshold = 0.0001
         verbose = false % Whether to log various calculation details like the transformation matrix and more.
+        save_to_file = '' % By default does not save positions
     end
 
     validate_inputs(dh_parameters, parameter_ranges);
@@ -95,6 +100,14 @@ function plot2dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, unuse
         error(['With a 2D workspace, it is expected that one of the X,Y,Z positions' ...
             ' is always near 0 (< %d). Instead the smallest candidate %s has a max position magnitude of' ...
             '%d'], unused_position_threshold, axis_labels{min_idx}, minValues(min_idx))
+    end
+
+    % Save positions to a .mat file if a file name is provided
+    if ~isempty(save_to_file)
+        if verbose
+            fprintf('Saving positions to %s...\n', save_to_file);
+        end
+        save(save_to_file, 'positions');
     end
 
     % Plot results

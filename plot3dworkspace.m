@@ -1,8 +1,8 @@
-function plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbose)
+function plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbose, save_to_file)
 %PLOT3DWORKSPACE Plots a 3D representation of the reachable workspace of a robot.
 %
 % Syntax:
-%   plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbose)
+%   plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbose, save_to_file)
 %
 % Inputs:
 %   dh_parameters: A matrix containing the Denavit-Hartenberg parameters.
@@ -23,6 +23,9 @@ function plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbo
 %            display various calculation details like the transformation matrix 
 %            and more. Default: false.
 %
+%   save_to_file: (Optional) A string specifying the name of the .mat file to 
+%                 save the positions cell array. If empty, positions will not be saved.
+%
 % Outputs:
 %   No outputs. The function directly plots the reachable workspace.
 %
@@ -32,6 +35,7 @@ function plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbo
         parameter_ranges
         dh_transform_fn = @get_DH_matrix
         verbose = false % Whether to log various calculation details like the transformation matrix and more.
+        save_to_file = ''
     end
 
     validate_inputs(dh_parameters, parameter_ranges);
@@ -75,6 +79,14 @@ function plot3dworkspace(dh_parameters, parameter_ranges, dh_transform_fn, verbo
         positions{i} = pos_func(func_params{:});
     end
     
+    % Save positions to a .mat file if a file name is provided
+    if ~isempty(save_to_file)
+        if verbose
+            fprintf('Saving positions to %s...\n', save_to_file);
+        end
+        save(save_to_file, 'positions');
+    end
+
     % Plot points
     figure(1)
     plot3(positions{:},'.');
